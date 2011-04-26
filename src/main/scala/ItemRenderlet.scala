@@ -21,7 +21,7 @@ import org.xml.sax.SAXParseException
  */
 class ItemRenderlet extends SRenderlet {
 
-	val getRdfType = new UriRef("http://purl.org/rss/1.0/item")
+	val getRdfType = Ontology.Item
 
 	override def getModePattern = "naked"
 

@@ -12,15 +12,20 @@ import org.apache.clerezza.rdf.ontologies.RDF
 /**
  * Activator for a bundle using Apache Clerezza.
  */
-class Activator extends BundleActivator {
+class Activator extends BundleActivator with ActivationHelper {
 
-	var helloWorldRegistration: ServiceRegistration = null
-	var itemRenderletRegistration: ServiceRegistration = null
-	var resourceRenderletRegistration: ServiceRegistration = null
+
+	registerRootResource(new Blog(context))
+	registerTypeHandler(new LatestItemsTypeHandler(context))
+	registerRenderlet(new ResourceRenderlet)
+	registerRenderlet(new ItemRenderlet)
+	registerRenderlet(new ItemFormRenderlet)
+
 	/**
 	 * called when the bundle is started, this method initializes the provided service
 	 */
-	def start(context: BundleContext) {
+	override def start(context: BundleContext) {
+		super.start(context)
 		val servicesDsl = new ServicesDsl(context)
 		import servicesDsl._
 		println("activating...")
@@ -29,24 +34,14 @@ class Activator extends BundleActivator {
 		val cg = cgp.getContentGraph
 		cg.add(new TripleImpl(new UriRef("http://localhost:8080/"), RDF.`type`, Ontology.LatestItemsPage))
 
-		val args = scala.collection.mutable.Map("org.apache.clerezza.platform.typehandler" -> true)
-		helloWorldRegistration = context.registerService(classOf[Object].getName,
-												  new LatestItemsTypeHandler(context), args)
-		val renderlet = new ItemRenderlet
-		itemRenderletRegistration = context.registerService(classOf[TypeRenderlet].getName,
-												  renderlet, null)
-		resourceRenderletRegistration = context.registerService(classOf[TypeRenderlet].getName,
-												  new ResourceRenderlet, null)
 		println("enjoy it!")
 	}
 
 	/**
 	 * called when the bundle is stopped, this method unregisters the provided service
 	 */
-	def stop(context: BundleContext) {
-		helloWorldRegistration.unregister()
-		itemRenderletRegistration.unregister()
-		resourceRenderletRegistration.unregister()
+	override def stop(context: BundleContext) {
+		super.stop(context)
 		println("bye")
 	}
 

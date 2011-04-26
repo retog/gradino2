@@ -10,5 +10,7 @@ object Ontology {
 
 	final val LatestItemsPage_String = "http://farewellutopia.com/blog#LatestItemsPage"
 	val LatestItemsPage = new UriRef("http://farewellutopia.com/blog#LatestItemsPage")
+	val Item = new UriRef("http://purl.org/rss/1.0/item")
+
 
 }

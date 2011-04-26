@@ -52,10 +52,10 @@ class LatestItemsTypeHandler(context: BundleContext) {
 		val qe = $[QueryEngine]
 		val qResult = qe.execute(null, cg, query).asInstanceOf[ResultSet]
 		import collection.JavaConversions._
-		for (sm <- qResult) {
-			println(sm.get("item"))
-		}
 		val list = graphNode.asList
+		for (sm <- qResult) {
+			list.add(sm.get("item"))
+		}
 		list.add(new UriRef("http://foo"))
 		graphNode.addPropertyValue(DC.description,"Hello world of "+cgp.getContentGraph.size);
 		graphNode;
