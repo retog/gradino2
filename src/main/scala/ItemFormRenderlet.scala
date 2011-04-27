@@ -1,6 +1,5 @@
 package org.farewellutopia.blog
 
-import org.farewellutopia.blog.Ontology
 import scala.xml.XML
 import java.util.Date
 import java.text.DateFormat
