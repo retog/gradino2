@@ -3,47 +3,72 @@ package org.farewellutopia.blog
 import org.apache.clerezza.osgi.services.ServicesDsl
 import org.apache.clerezza.platform.typerendering.TypeRenderlet
 import scala.collection.JavaConversions.asJavaDictionary
+import scala.collection.mutable
 import org.osgi.framework.{ServiceRegistration, BundleContext, BundleActivator}
 
+/**
+ * A trait to facilitate creating bundle actovators to register service.
+ *
+ * This should be contributed to Clerezza.
+ */
 trait ActivationHelper extends BundleActivator {
 
+	/**
+	 * this is intended to be used exclusively in the argument to the register-methods
+	 */
 	protected var context: BundleContext= null
 
+	/**
+	 * Registers a JAX-RS Root Resource
+	 */
 	protected def registerRootResource(rootResource: =>Object) {
-		pendingRootResources ::= (() => rootResource)
+		registerService(rootResource, classOf[Object], "javax.ws.rs" -> true)
 	}
 
+	/**
+	 * Register a Renderlet
+	 */
 	protected def registerRenderlet(renderlet: =>TypeRenderlet) {
-		pendingRenderlets ::= (() => renderlet)
+		registerService(renderlet, classOf[TypeRenderlet])
 	}
 
+	/**
+	 * Register a TypeHandler
+	 */
 	protected def registerTypeHandler(typeHandler: => Object) {
-		 pendingTypeHandler ::= (() => typeHandler)
+		registerService(typeHandler, classOf[Object], "org.apache.clerezza.platform.typehandler" -> true)
 	}
 
+	/**
+	 * Register a service exposing a specified interface with an arbitrary number of
+	 * arguments
+	 */
+	protected def registerService(instance: => AnyRef, interface:Class[_],
+																arguments: (String, Any)*) {
+		registerService(instance, Seq(interface), Map(arguments:_*))
+	}
+
+	/**
+	 * Registers a service for a Seq of interfaces and a map of arguments
+	 */
+	protected def registerService(instance: => AnyRef, interfaces: Seq[Class[_]],
+																arguments: Map[String, Any]) {
+		managedServices ::= ((() => instance, interfaces, arguments))
+	}
+
+	/**
+	 * invoked by the OSGi environment when the bundle is started, this method registers
+	 * the services for which the register-methods hqave been called (during object construction)
+	 */
 	def start(context: BundleContext) {
 		this.context = context
-		val servicesDsl = new ServicesDsl(context)
-		import servicesDsl._
-		println("helping!")
 		registeredServices = Nil
-		for (rr <- pendingRootResources) {
-			val args = scala.collection.mutable.Map("javax.ws.rs" -> true)
-			registeredServices ::= context.registerService(classOf[Object].getName,
-												 rr(), args)
+		for (entry <- managedServices) {
+			val args = asJavaDictionary(mutable.Map(entry._3.toSeq:_*))
+			registeredServices ::= context.registerService(
+				(for (interface <- entry._2) yield interface.getName).toArray, entry._1(), args)
 		}
-		pendingRootResources = Nil
-		for (rr <- pendingTypeHandler) {
-			val args = scala.collection.mutable.Map("org.apache.clerezza.platform.typehandler" -> true)
-			registeredServices ::= context.registerService(classOf[Object].getName,
-												  rr(), args)
-		}
-		pendingTypeHandler = Nil
-		for (rr <- pendingRenderlets) {
-			registeredServices ::= context.registerService(classOf[TypeRenderlet].getName,
-												  rr(), null)
-		}
-		pendingRenderlets = Nil
+		this.context = null
 	}
 
 	/**
@@ -52,12 +77,11 @@ trait ActivationHelper extends BundleActivator {
 	def stop(context: BundleContext) {
 		for(sr <- registeredServices) {
 			sr.unregister();
-			println("u")
 		}
+		registeredServices = null
 	}
 
-	private var pendingRootResources: List[() => Object] = Nil
-	private var pendingTypeHandler: List[() => Object] = Nil
-	private var pendingRenderlets: List[() => Object] = Nil
+	private var managedServices: List[(() => Any, Seq[Class[_]], Map[String, Any])] = Nil
+
 	private var registeredServices: List[ServiceRegistration] = null
 }

@@ -20,6 +20,7 @@ class Activator extends BundleActivator with ActivationHelper {
 	registerRenderlet(new ResourceRenderlet)
 	registerRenderlet(new ItemRenderlet)
 	registerRenderlet(new ItemFormRenderlet)
+	registerService(new LatestItemsService(context), classOf[LatestItemsService])
 
 	/**
 	 * called when the bundle is started, this method initializes the provided service
