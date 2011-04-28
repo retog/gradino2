@@ -27,8 +27,13 @@ class ItemRenderlet extends SRenderlet {
 
 	override def renderedPage(arguments: XmlResult.Arguments) = {
 		new XmlResult(arguments) {
-			val editLink = "edit/"+(res*)
 			override def content = {
+				val selfLink = res.getNode match {
+					case u: UriRef => u.getUnicodeString
+					case b: BNode => "/blog/newpost"
+				}
+
+				val editLink =  selfLink+"?mode=form"
 				lazy val dateFormat = {
 					val acceptable = requestHeaders.getAcceptableLanguages
 					if (acceptable.size > 0) {
@@ -47,7 +52,7 @@ class ItemRenderlet extends SRenderlet {
 				} catch {
 					case ex: SAXParseException => <div><strong>The following literal could not be parsed as XHTML:<br/></strong> {res/Ontology.content*}</div>
 				}
-				<div class="hentry"><h2 class="entry-title"><a href={res*}>{res/Ontology.title*}</a>
+				<div class="hentry"><h2 class="entry-title"><a href={selfLink}>{res/Ontology.title*}</a>
 					<a href={editLink}><img src="/icons/edit.png" /></a></h2>
                   {xmlContent}
                   <p class="author">{res/FOAF.maker/FOAF.name*}</p>

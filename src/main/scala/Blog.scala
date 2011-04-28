@@ -10,9 +10,13 @@ import com.hp.hpl.jena.rdf.model.ModelFactory
 import java.util.Date
 import java.text.SimpleDateFormat
 import org.apache.clerezza.rdf.scala.utils.Preamble
-import org.apache.clerezza.rdf.core.UriRef
-import org.apache.clerezza.rdf.utils.GraphNode
-
+import org.apache.clerezza.platform.graphprovider.content.ContentGraphProvider
+import org.apache.clerezza.rdf.core.{BNode, UriRef}
+import org.apache.clerezza.rdf.utils.{UnionMGraph, GraphNode}
+import org.apache.clerezza.rdf.core.impl.{PlainLiteralImpl, SimpleMGraph}
+import org.apache.clerezza.rdf.ontologies.{DC, RDF}
+import java.security.AccessController
+import org.apache.clerezza.rdf.core.access.security.TcPermission
 
 @Path("blog")
 class Blog(context: BundleContext) {
@@ -23,6 +27,21 @@ class Blog(context: BundleContext) {
 
 	//TODO get from service
 	private val baseUri = "http://localhost:8080"
+
+	@GET
+	@Path("newpost")
+	def newPost() = {
+		//There's mno point showing this page to users that cannot write to the content graph
+		AccessController.checkPermission(new TcPermission(Constants.CONTENT_GRAPH_URI_STRING, TcPermission.READWRITE))
+		val resultMGraph = new SimpleMGraph();
+		val cgp: ContentGraphProvider = $[ContentGraphProvider]
+		val cg = cgp.getContentGraph
+		val graphNode = new GraphNode(new BNode(), new UnionMGraph(cg, resultMGraph))
+		graphNode.addProperty(RDF.`type`, Ontology.Item)
+		graphNode.addPropertyValue(DC.date, new Date)
+		graphNode.addProperty(Ontology.title, new PlainLiteralImpl("a blank item"))
+		graphNode
+	}
 
 
 	@POST

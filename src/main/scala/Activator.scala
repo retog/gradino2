@@ -31,10 +31,10 @@ class Activator extends BundleActivator with ActivationHelper {
 		import servicesDsl._
 		println("activating...")
 		//adding some triples to the content graph
-		val cgp = $[ContentGraphProvider]
-		val cg = cgp.getContentGraph
-		cg.add(new TripleImpl(new UriRef("http://localhost:8080/"), RDF.`type`, Ontology.LatestItemsPage))
-
+		doWith[ContentGraphProvider]{cgp =>
+			val cg = cgp.getContentGraph
+			cg.add(new TripleImpl(new UriRef("http://localhost:8080/"), RDF.`type`, Ontology.LatestItemsPage))
+		}
 		println("enjoy it!")
 	}
 

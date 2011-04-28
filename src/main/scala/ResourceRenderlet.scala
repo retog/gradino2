@@ -8,7 +8,9 @@ import impl.util.W3CDateFormat
 import org.apache.clerezza.rdf.scala.utils.Preamble._
 import org.apache.clerezza.platform.typerendering.scala._
 import org.xml.sax.SAXParseException
+import org.apache.clerezza.rdf.ontologies.RDF
 import org.apache.clerezza.rdf.ontologies.RDFS
+import org.apache.clerezza.rdf.scala.utils.RichGraphNode
 
 
 /**
@@ -53,11 +55,20 @@ class ResourceRenderlet extends SRenderlet {
 				<div id="content">
 				<div id="main">
 
-					{
-			if (mode == null) {
-				render(res, "naked")
+		{
+			def iRender(n: RichGraphNode) = {
+				if (mode == null) {
+					render(n, "naked")
+				} else {
+					render(n, mode + "-naked")
+				}
+			}
+			if ((res/RDF.first).size > 0) {
+				for (n <- res!!) yield {
+					iRender(n)
+				}
 			} else {
-				render(res, mode + "-naked")
+				iRender(res)
 			}
 		}
 					</div>

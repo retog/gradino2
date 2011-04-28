@@ -23,38 +23,18 @@ import org.apache.clerezza.rdf.core.sparql.query.Query
 class LatestItemsTypeHandler(context: BundleContext) {
 	private val servicesDsl = new ServicesDsl(context)
 	import servicesDsl._
-	private var query: Query = null
-	doWith[QueryParser] {
-		qp => query = qp.parse("""prefix dc: <http://purl.org/dc/elements/1.1/>
-              prefix foaf:  <http://xmlns.com/foaf/0.1/>
-              prefix rss:  <http://purl.org/rss/1.0/>
-             prefix content:  <http://purl.org/rss/1.0/modules/content/>
-              prefix planet: <http://planetrdf.com/ns/>
 
-              SELECT ?item  WHERE {
-
-              	?item a rss:item ;
-              		rss:title ?title ;
-              		planet:content ?content ;
-              		dc:date ?date ;
-                    foaf:maker ?maker .
-                    ?maker foaf:name ?makerName .
-              }
-              ORDER BY DESC(?date)
-              LIMIT 20""")
-	}
 	@GET def get() = {
 		val resultMGraph = new SimpleMGraph();
 		val cgp: ContentGraphProvider = $[ContentGraphProvider]
 		val cg = cgp.getContentGraph
 		val graphNode = new GraphNode(new BNode(), new UnionMGraph(cg, resultMGraph));
-		//graphNode.addProperty(RDF.`type` , Ontology.LatestItemsPage);
-		val qe = $[QueryEngine]
-		val qResult = qe.execute(null, cg, query).asInstanceOf[ResultSet]
 		import collection.JavaConversions._
 		val list = graphNode.asList
-		for (sm <- qResult) {
-			list.add(sm.get("item"))
+		val allItems = $[LatestItemsService]
+		val first10 = allItems.getItems.splitAt(10)._1
+		for (item <- first10) {
+			list.add(item._2)
 		}
 		list.add(new UriRef("http://foo"))
 		graphNode.addPropertyValue(DC.description,"Hello world of "+cgp.getContentGraph.size);
