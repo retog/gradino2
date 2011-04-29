@@ -36,8 +36,6 @@ class LatestItemsTypeHandler(context: BundleContext) {
 		for (item <- first10) {
 			list.add(item._2)
 		}
-		list.add(new UriRef("http://foo"))
-		graphNode.addPropertyValue(DC.description,"Hello world of "+cgp.getContentGraph.size);
 		graphNode;
 
 	}

@@ -18,7 +18,7 @@ import util.Sorting
  * a service returning available items in inverse cronological order (latest
  * first) by their DC.date property
  */
-class LatestItemsService(context: BundleContext) {
+class LatestItemsService(context: BundleContext) extends GraphListener {
 	private val servicesDsl = new ServicesDsl(context)
 	import servicesDsl._
 
@@ -56,24 +56,23 @@ class LatestItemsService(context: BundleContext) {
 		Sorting.quickSort(itemsArray)(Ordering[Long].on[(Date, UriRef)](_._1.getTime).reverse);
 		items = itemsArray.toList
 		println("sorted "+items.size)
-		println("first "+items.head)
 	}
 	private val tcm: TcManager = $[TcManager]
 	private val cg = tcm.getMGraph(Constants.CONTENT_GRAPH_URI)
-	cg.addGraphListener(new GraphListener() {
-			def graphChanged(events: java.util.List[GraphEvent]) {
-				val itemsArray = items.toArray
-				import collection.JavaConversions._
-				for (e <- events) {
-					println("processing "+e)
-					e match {
-						case e: RemoveEvent => items = items.filterNot(_._2 == e.getTriple.getSubject)
-						case e: AddEvent => {
-							prependItemFromTriple(e.getTriple)
-							//we just assume the just added item has the most recent date, or we should resort here
-						}
-					}
+	cg.addGraphListener(this, new FilterTriple(null, DC.date, null), 1000)
+
+	def graphChanged(events: java.util.List[GraphEvent]) {
+		val itemsArray = items.toArray
+		import collection.JavaConversions._
+		for (e <- events) {
+			println("processing "+e)
+			e match {
+				case e: RemoveEvent => items = items.filterNot(_._2 == e.getTriple.getSubject)
+				case e: AddEvent => {
+					prependItemFromTriple(e.getTriple)
+					//we just assume the just added item has the most recent date, or we should resort here
 				}
 			}
-		}, new FilterTriple(null, DC.date, null), 1000)
+		}
+	}
 }
