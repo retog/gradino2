@@ -1,4 +1,4 @@
-package org.farewellutopia.blog
+package com.farewellutopia.blog
 
 import org.osgi.framework.{BundleActivator, BundleContext, ServiceRegistration}
 import scala.collection.JavaConversions.asJavaDictionary
@@ -20,6 +20,7 @@ class Activator extends BundleActivator with ActivationHelper {
 	registerRenderlet(new ResourceRenderlet)
 	registerRenderlet(new ItemRenderlet)
 	registerRenderlet(new ItemFormRenderlet)
+	registerRenderlet(new ItemZariaRenderlet)
 	registerService(new LatestItemsService(context), classOf[LatestItemsService])
 
 	/**
@@ -34,6 +35,7 @@ class Activator extends BundleActivator with ActivationHelper {
 		doWith[ContentGraphProvider]{cgp =>
 			val cg = cgp.getContentGraph
 			cg.add(new TripleImpl(new UriRef("http://localhost:8080/"), RDF.`type`, Ontology.LatestItemsPage))
+			cg.add(new TripleImpl(new UriRef("https://localhost:8443/"), RDF.`type`, Ontology.LatestItemsPage))
 		}
 		println("enjoy it!")
 	}

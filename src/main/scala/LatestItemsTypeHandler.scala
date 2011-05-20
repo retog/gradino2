@@ -1,4 +1,4 @@
-package org.farewellutopia.blog
+package com.farewellutopia.blog
 
 import javax.ws.rs._
 import org.apache.clerezza.platform.typehandlerspace.SupportedTypes
@@ -21,6 +21,7 @@ import org.apache.clerezza.rdf.core.sparql.query.Query
 @SupportedTypes(types = Array(Ontology.LatestItemsPage_String),
 	prioritize = true)
 class LatestItemsTypeHandler(context: BundleContext) {
+
 	private val servicesDsl = new ServicesDsl(context)
 	import servicesDsl._
 
@@ -28,7 +29,7 @@ class LatestItemsTypeHandler(context: BundleContext) {
 		val resultMGraph = new SimpleMGraph();
 		val cgp: ContentGraphProvider = $[ContentGraphProvider]
 		val cg = cgp.getContentGraph
-		val graphNode = new GraphNode(new BNode(), new UnionMGraph(cg, resultMGraph));
+		val graphNode = new GraphNode(new BNode(), new UnionMGraph(resultMGraph, cg));
 		import collection.JavaConversions._
 		val list = graphNode.asList
 		val allItems = $[LatestItemsService]
@@ -37,6 +38,5 @@ class LatestItemsTypeHandler(context: BundleContext) {
 			list.add(item._2)
 		}
 		graphNode;
-
 	}
 }

@@ -1,4 +1,4 @@
-package org.farewellutopia.blog
+package com.farewellutopia.blog
 
 import scala.xml.XML
 import java.util.Date

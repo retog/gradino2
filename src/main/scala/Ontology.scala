@@ -1,4 +1,4 @@
-package org.farewellutopia.blog
+package com.farewellutopia.blog
 
 import org.apache.clerezza.rdf.core.UriRef
 

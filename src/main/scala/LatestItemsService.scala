@@ -1,4 +1,4 @@
-package org.farewellutopia.blog
+package com.farewellutopia.blog
 
 import javax.ws.rs._
 import org.apache.clerezza.rdf.core.access.TcManager

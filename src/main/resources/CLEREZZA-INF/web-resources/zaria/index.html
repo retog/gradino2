@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Zaria Sample</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script language="javascript" type="text/javascript" src="zaria.js"></script>
+		<script language="javascript" type="text/javascript" src="htmlparser.js"></script>
+	</head>
+	<body>
+		<div>
+			<textarea id="default-id" name="default" style="width:520px; height:250px;"></textarea>
+			<div><a href="#" onclick="getDefault();">Get Content</a></div>
+		</div>
+		<hr />
+		<div>
+			<textarea id="content-id" name="content" style="width:520px; height:250px;"></textarea>
+			<div><a href="#" onclick="getContent();">Get Content</a></div>
+		</div>
+		<script>
+			var options = {
+				layout: "<div class='zariaToolbar'>[bold][italic][underline][justify-left][justify-full][justify-center][justify-right][unordered-list][ordered-list][font][size][link][unlink][html]</div>[edit-area]",
+				buttons: [
+						{name:'bold', label:'Bold', cmd:'bold', className:'bold'},
+						{name:'italic', label:'Italic', cmd:'italic', className:'italic'},
+						{name:'underline', label:'Underline', cmd:'underline', className:'underline'},
+						{name:'justify-left', label:'Align Left', cmd:'justifyleft', className:'justifyleft'},
+						{name:'justify-full', label:'Justify', cmd:'justifyfull', className:'justifyfull'},
+						{name:'justify-center', label:'Align Center', cmd:'justifycenter', className:'justifycenter'},
+						{name:'justify-right', label:'Align Right', cmd:'justifyright', className:'justifyright'},
+						{name:'unordered-list', label:'Unordered List', cmd:'insertunorderedlist', className:'insertunorderedlist'},
+						{name:'ordered-list', label:'Ordered List', cmd:'insertorderedlist', className:'insertorderedlist'},
+						{name:'font', label:'Font', cmd:'fontname', menu:[{label:'Arial', value:'Arial'},{label:'Courier', value:'Courier'},{label:'Times New Roman', value:'Times New Roman'}]},
+						{name:'size', label:'Size', cmd:'fontsize', menu:[{label:'12pt', value:'3'},{label:'24pt', value:'6'},{label:'36pt', value:'7'}]},
+						{name:'link', label:'Link', cmd:'createlink', className:'link', prompt:"Enter your URL: "},
+						{name:'unlink', label:'Unlink', cmd:'unlink', className:'unlink'},
+						{name:'html', label:'html toggle', toggleMode: true, className:'html'}
+				]
+			};
+
+			var defaultArea = new Zaria('default-id');
+			function getDefault() {
+				defaultArea.syncContent();
+				alert(document.getElementById('default-id').value);
+			}
+
+			var content = new Zaria('content-id', options);
+			function getContent() {
+				content.syncContent();
+				alert(document.getElementById('content-id').value);
+			}
+		</script>
+	</body>
+</html>

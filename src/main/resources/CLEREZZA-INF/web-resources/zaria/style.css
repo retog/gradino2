@@ -1,0 +1,17 @@
+.zariaToolbar { border: 1px solid #CCC; padding: 0px; width: 520px; margin-bottom: 2px; overflow: hidden; }
+.zariaToolbar a { margin: 5px 4px 4px 4px; cursor: pointer; float: left; display: block; background: transparent url(images/icons.gif) no-repeat scroll 0 0; width: 20px; height: 20px; text-indent: -999px; overflow: hidden; }
+.zariaToolbar a:hover { background-color: #CCC; }
+.zariaToolbar select { margin: 5px 4px 4px 4px; cursor: pointer; float: left; display: block; }
+			
+.zariaToolbar a.bold { background-position: 0 0; }
+.zariaToolbar a.italic { background-position: 0 -20px; }
+.zariaToolbar a.underline { background-position: 0 -40px; }
+.zariaToolbar a.justifyleft { background-position: 0 -60px; }
+.zariaToolbar a.justifyfull { background-position: 0 -80px; }
+.zariaToolbar a.justifycenter {	background-position: 0 -100px; }
+.zariaToolbar a.justifyright { background-position: 0 -120px; }
+.zariaToolbar a.insertunorderedlist { background-position: 0 -140px; }
+.zariaToolbar a.insertorderedlist {	background-position: 0 -160px; }
+.zariaToolbar a.link { background-position: 0 -260px; }
+.zariaToolbar a.unlink { background-position: 0 -280px; }
+.zariaToolbar a.html { background-position: 0 -300px; }

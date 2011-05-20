@@ -1,8 +1,5 @@
-package org.farewellutopia.blog
+package com.farewellutopia.blog
 
-import scala.xml.XML
-import java.util.Date
-import java.text.DateFormat
 import org.apache.clerezza.rdf.core._
 import impl.util.W3CDateFormat
 import org.apache.clerezza.rdf.scala.utils.Preamble._
@@ -49,7 +46,7 @@ class ItemFormRenderlet extends SRenderlet {
   <label>Author </label><input type="text" name="makerName" value={res/FOAF.maker/FOAF.name*} />
 
 
-  <label>URI </label><input type="text" name="uri" value={res*} />
+	<label>URI</label><input type="text" name="uri" value={if (res.getNode.isInstanceOf[BNode]) {"<new>"} else {res*} } />
 
   <p><label>Title</label> <input type="text" name="title" value= {res/Ontology.title*} /></p>
 
