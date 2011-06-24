@@ -8,6 +8,7 @@ import org.apache.clerezza.platform.typerendering._
 import org.apache.clerezza.rdf.core.UriRef
 import org.apache.clerezza.rdf.utils.GraphNode
 import org.apache.clerezza.rdf.core._
+import com.petebevin.markdown.MarkdownProcessor
 import impl.util.W3CDateFormat
 import org.apache.clerezza.rdf.utils._
 import org.apache.clerezza.rdf.scala.utils.Preamble._
@@ -47,10 +48,14 @@ class ItemRenderlet extends SRenderlet {
 					tag*
 				}).mkString(" ")
 
-				val xmlContent = try {
-					XML.loadString("<root>"+(res/Ontology.content*)+"</root>").child
-				} catch {
-					case ex: SAXParseException => <div><strong>The following literal could not be parsed as XHTML:<br/></strong> {res/Ontology.content*}</div>
+				val xmlContent = if (((res/Ontology.content)(0)).getNode.asInstanceOf[TypedLiteral].getDataType == RDF.XMLLiteral) {
+					try {
+						XML.loadString("<root>"+(res/Ontology.content*)+"</root>").child
+					} catch {
+						case ex: SAXParseException => <div><strong>The following literal could not be parsed as XHTML:<br/></strong> {res/Ontology.content*}</div>
+					}
+				} else {
+					XML.loadString("<root>"+new MarkdownProcessor().markdown(res/Ontology.content*)+"</root>").child
 				}
 				<div class="hentry"><h2 class="entry-title"><a href={selfLink}>{res/Ontology.title*}</a>
 					<a href={editLink}><img src="/icons/edit.png" /></a></h2>

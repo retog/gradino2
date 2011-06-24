@@ -3,8 +3,12 @@ package com.farewellutopia.blog
 import javax.ws.rs._
 import org.apache.clerezza.osgi.services.ServicesDsl
 import org.osgi.framework.BundleContext
+import org.apache.clerezza.rdf.core.LiteralFactory
+import org.apache.clerezza.rdf.core.TypedLiteral
 import org.apache.clerezza.rdf.core.access.TcManager
 import org.apache.clerezza.platform.Constants
+import org.apache.clerezza.rdf.core.impl.TripleImpl
+import org.apache.clerezza.rdf.core.impl.TypedLiteralImpl
 import org.apache.clerezza.rdf.jena.facade.JenaGraph
 import com.hp.hpl.jena.rdf.model.ModelFactory
 import java.util.Date
@@ -64,13 +68,15 @@ class Blog(context: BundleContext) extends Logging {
 	@Produces(Array("text/html"))
 	def handle(@FormParam("title") title: String,
 				@FormParam("content") content: String,
+				@FormParam("contentMarkDown") contentMarkDown: String,
 				@FormParam("makerName") makerName: String,
 				@FormParam("uri") uriString: String,
 			   @FormParam("tags") tags : String, @FormParam("date") date : String) = {
-		insertItem(title, content, makerName, uriString, tags, date)
+		insertItem(title, content, contentMarkDown, makerName, uriString, tags, date)
 	}
 
-	private def insertItem(title: String, content: String, makerName : String,
+	private def insertItem(title: String, content: String, contentMarkDown: String,
+						   makerName : String,
 						   uriString: String, tags : String,
 												 existingDate : String) = {
 		val date =
@@ -108,7 +114,7 @@ class Blog(context: BundleContext) extends Logging {
 
 		jenaModel.add(item, jenaModel.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), itemType)
 		jenaModel.add(item, jenaModel.createProperty("http://purl.org/rss/1.0/title"), title)
-		jenaModel.add(item, jenaModel.createProperty("http://planetrdf.com/ns/content"), content)
+		//jenaModel.add(item, jenaModel.createProperty("http://planetrdf.com/ns/content"), content)
 		jenaModel.add(item, jenaModel.createProperty("http://purl.org/dc/elements/1.1/date"), date)
 		jenaModel.add(item, jenaModel.createProperty("http://xmlns.com/foaf/0.1/maker"), maker)
 		jenaModel.add(maker, jenaModel.createProperty("http://xmlns.com/foaf/0.1/name"), makerName)
@@ -116,6 +122,14 @@ class Blog(context: BundleContext) extends Logging {
 		//doTags(item, tags)
 		jenaModel.close
 		System.out.println("item inserted/modified: "+item)
+		val itemRes = new UriRef(uri)
+		val contentLit = if (content != null) {
+			new TypedLiteralImpl(content, RDF.XMLLiteral)
+		} else {
+			LiteralFactory.getInstance.createTypedLiteral(contentMarkDown)
+		}
+		contentGraph.add(new TripleImpl(itemRes, 
+			new UriRef("http://planetrdf.com/ns/content"), contentLit))
 	}
 	private def getDate() : String = {
         val now = new Date();

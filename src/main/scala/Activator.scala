@@ -21,6 +21,7 @@ class Activator extends BundleActivator with ActivationHelper {
 	registerRenderlet(new ItemRenderlet)
 	registerRenderlet(new ItemFormRenderlet)
 	registerRenderlet(new ItemZariaRenderlet)
+	registerRenderlet(new ItemMarkDownRenderlet)
 	registerService(new LatestItemsService(context), classOf[LatestItemsService])
 
 	/**
