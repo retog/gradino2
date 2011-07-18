@@ -73,6 +73,7 @@ class Blog(context: BundleContext) extends Logging {
 				@FormParam("uri") uriString: String,
 			   @FormParam("tags") tags : String, @FormParam("date") date : String) = {
 		insertItem(title, content, contentMarkDown, makerName, uriString, tags, date)
+		"item saved"
 	}
 
 	private def insertItem(title: String, content: String, contentMarkDown: String,
