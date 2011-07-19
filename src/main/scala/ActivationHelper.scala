@@ -1,4 +1,4 @@
-package com.farewellutopia.blog
+package org.wymiwyg.gradino
 
 import org.apache.clerezza.osgi.services.ServicesDsl
 import org.apache.clerezza.platform.typerendering.TypeRenderlet

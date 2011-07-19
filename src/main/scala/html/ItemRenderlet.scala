@@ -1,5 +1,6 @@
-package com.farewellutopia.blog
+package org.wymiwyg.gradino.html
 
+import org.wymiwyg.gradino.Ontology
 import scala.xml.XML
 import javax.ws.rs.core.MediaType
 import java.util.Date
@@ -34,7 +35,6 @@ class ItemRenderlet extends SRenderlet {
 					case b: BNode => "/blog/newpost"
 				}
 
-				val editLink =  selfLink+"?mode=form"
 				lazy val dateFormat = {
 					val acceptable = requestHeaders.getAcceptableLanguages
 					if (acceptable.size > 0) {
@@ -48,7 +48,8 @@ class ItemRenderlet extends SRenderlet {
 					tag*
 				}).mkString(" ")
 
-				val xmlContent = if (((res/Ontology.content)(0)).getNode.asInstanceOf[TypedLiteral].getDataType == RDF.XMLLiteral) {
+				val xmlContent = if (((res/Ontology.content).size > 0) &&
+						(((res/Ontology.content)(0)).getNode.asInstanceOf[TypedLiteral].getDataType == RDF.XMLLiteral)) {
 					try {
 						XML.loadString("<root>"+(res/Ontology.content*)+"</root>").child
 					} catch {
@@ -58,17 +59,22 @@ class ItemRenderlet extends SRenderlet {
 					XML.loadString("<root>"+new MarkdownProcessor().markdown(res/Ontology.content*)+"</root>").child
 				}
 				<div class="hentry"><h2 class="entry-title"><a href={selfLink}>{res/Ontology.title*}</a>
-					<a href={editLink}><img src="/icons/edit.png" /></a></h2>
+					<a href={selfLink+"?mode=tiny"}><img src="/icons/edit.png" /></a>
+					<a href={selfLink+"?mode=markDown"}><img src="/icons/markdown.png" /></a></h2>
+					{ifx (((res/FOAF.maker/FOAF.name).size > 0) && ((res/FOAF.maker/FOAF.name*) != "")) {
+						<p class="author">by {res/FOAF.maker/FOAF.name*}</p>}
+					}
                   {xmlContent}
-                  <p class="author">{res/FOAF.maker/FOAF.name*}</p>
-                  <p class="published">pub:{
-										try {
-											dateFormat.format((res/DC.date).as[Date]) //assumes its a typed literal
-										} catch {
-											case e: ClassCastException => res/DC.date*
-										}
-									}</p>
-                  <p class="tag">{tags}</p>
+					<p class="published">
+					{
+						try {
+							dateFormat.format((res/DC.date).as[Date]) //assumes its a typed literal
+						} catch {
+							case e: ClassCastException => "pub: "+ (res/DC.date*)
+						}
+					}
+					</p>
+                  <!-- <p class="tag">{tags}</p> -->
                   <!-- <p><a href={ related }>Related</a></p>
                   <p><a href={ comment }>Comments</a></p> -->
                </div>

@@ -1,4 +1,4 @@
-package com.farewellutopia.blog
+package org.wymiwyg.gradino
 
 import javax.ws.rs._
 import org.apache.clerezza.rdf.core.access.TcManager

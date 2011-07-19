@@ -1,4 +1,4 @@
-package com.farewellutopia.blog
+package org.wymiwyg.gradino
 
 import org.apache.clerezza.rdf.core.UriRef
 
@@ -9,8 +9,10 @@ object Ontology {
 	val taggedWith = new UriRef("http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedWithTag")
 
 	final val LatestItemsPage_String = "http://farewellutopia.com/blog#LatestItemsPage"
-	val LatestItemsPage = new UriRef("http://farewellutopia.com/blog#LatestItemsPage")
+	val LatestItemsPage = new UriRef(LatestItemsPage_String)
 	val Item = new UriRef("http://purl.org/rss/1.0/item")
+
+	val BlogAdminPage = new UriRef("http://farewellutopia.com/blog#BlogAdminPage")
 
 
 }

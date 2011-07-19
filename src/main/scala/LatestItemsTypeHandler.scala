@@ -1,4 +1,4 @@
-package com.farewellutopia.blog
+package org.wymiwyg.gradino
 
 import javax.ws.rs._
 import org.apache.clerezza.platform.typehandlerspace.SupportedTypes
@@ -30,6 +30,7 @@ class LatestItemsTypeHandler(context: BundleContext) {
 		val cgp: ContentGraphProvider = $[ContentGraphProvider]
 		val cg = cgp.getContentGraph
 		val graphNode = new GraphNode(new BNode(), new UnionMGraph(resultMGraph, cg));
+		graphNode.addProperty(RDF.`type`, RDF.List)
 		import collection.JavaConversions._
 		val list = graphNode.asList
 		val allItems = $[LatestItemsService]

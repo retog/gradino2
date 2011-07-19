@@ -1,8 +1,13 @@
-package com.farewellutopia.blog
+package org.wymiwyg.gradino
 
 import javax.ws.rs._
+import com.hp.hpl.jena.vocabulary.XSD
+import core.Context
 import org.apache.clerezza.osgi.services.ServicesDsl
+import org.apache.clerezza.rdf.scala.utils.EzMGraph
+import org.apache.clerezza.rdf.scala.utils.RichGraphNode
 import org.osgi.framework.BundleContext
+import org.apache.clerezza.jaxrs.utils.RedirectUtil
 import org.apache.clerezza.rdf.core.LiteralFactory
 import org.apache.clerezza.rdf.core.TypedLiteral
 import org.apache.clerezza.rdf.core.access.TcManager
@@ -14,6 +19,9 @@ import com.hp.hpl.jena.rdf.model.ModelFactory
 import java.util.Date
 import java.text.SimpleDateFormat
 import org.slf4j.scala.Logging
+import javax.ws.rs.core.Response
+import javax.ws.rs.core.Response.ResponseBuilder
+import javax.ws.rs.core.UriInfo
 import org.apache.clerezza._
 import rdf.scala.utils.Preamble
 import platform.graphprovider.content.ContentGraphProvider
@@ -21,6 +29,7 @@ import rdf.core.{BNode, UriRef}
 import rdf.utils.{UnionMGraph, GraphNode}
 import rdf.core.impl.{PlainLiteralImpl, SimpleMGraph}
 import rdf.ontologies.{DC, RDF}
+import java.net.URI
 import java.security.AccessController
 import rdf.core.access.security.TcPermission
 
@@ -44,7 +53,39 @@ class Blog(context: BundleContext) extends Logging {
 
 	@GET
 	def default() = {
+		val result = new RichGraphNode(new BNode, new SimpleMGraph)
+		result a Ontology.BlogAdminPage
+		val resultList = result.asList
+		val cgp: ContentGraphProvider = $[ContentGraphProvider]
+		val cg = cgp.getContentGraph
+		val ezCg = new EzMGraph(cg)
+		import ezCg._
+		for (ltp <- Ontology.LatestItemsPage/-RDF.`type`) {
+			resultList.add(ltp.getNode)
+		}
+		result
+	}
 
+	@POST
+	@Path("removeLip")
+	def removeLip(@FormParam("lip") lip: UriRef, @Context baseUri: UriInfo) = {
+		val cgp: ContentGraphProvider = $[ContentGraphProvider]
+		val cg = cgp.getContentGraph
+		val ezCg = new EzMGraph(cg)
+		import ezCg._
+		lip.deleteProperty(RDF.`type`, Ontology.LatestItemsPage)
+		RedirectUtil.createSeeOtherResponse("/blog", baseUri)
+	}
+
+	@POST
+	@Path("addLip")
+	def addLip(@FormParam("lip") lip: UriRef, @Context baseUri: UriInfo) = {
+		val cgp: ContentGraphProvider = $[ContentGraphProvider]
+		val cg = cgp.getContentGraph
+		val ezCg = new EzMGraph(cg)
+		import ezCg._
+		lip a Ontology.LatestItemsPage
+		RedirectUtil.createSeeOtherResponse("/blog", baseUri)
 	}
 
 	@GET
@@ -72,8 +113,11 @@ class Blog(context: BundleContext) extends Logging {
 				@FormParam("makerName") makerName: String,
 				@FormParam("uri") uriString: String,
 			   @FormParam("tags") tags : String, @FormParam("date") date : String) = {
-		insertItem(title, content, contentMarkDown, makerName, uriString, tags, date)
-		"item saved"
+		val item: UriRef = insertItem(title, content, contentMarkDown, makerName, uriString, tags, date)
+		var responseBuilder: ResponseBuilder = Response.status(Response.Status.SEE_OTHER);
+		responseBuilder = responseBuilder.entity("item saved");
+		responseBuilder = responseBuilder.location(new URI(item.getUnicodeString));
+		responseBuilder.build
 	}
 
 	private def insertItem(title: String, content: String, contentMarkDown: String,
@@ -116,7 +160,7 @@ class Blog(context: BundleContext) extends Logging {
 		jenaModel.add(item, jenaModel.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), itemType)
 		jenaModel.add(item, jenaModel.createProperty("http://purl.org/rss/1.0/title"), title)
 		//jenaModel.add(item, jenaModel.createProperty("http://planetrdf.com/ns/content"), content)
-		jenaModel.add(item, jenaModel.createProperty("http://purl.org/dc/elements/1.1/date"), date)
+		jenaModel.add(item, jenaModel.createProperty("http://purl.org/dc/elements/1.1/date"), jenaModel.createTypedLiteral(date, XSD.dateTime.getURI))
 		jenaModel.add(item, jenaModel.createProperty("http://xmlns.com/foaf/0.1/maker"), maker)
 		jenaModel.add(maker, jenaModel.createProperty("http://xmlns.com/foaf/0.1/name"), makerName)
 
@@ -131,6 +175,7 @@ class Blog(context: BundleContext) extends Logging {
 		}
 		contentGraph.add(new TripleImpl(itemRes, 
 			new UriRef("http://planetrdf.com/ns/content"), contentLit))
+		itemRes
 	}
 	private def getDate() : String = {
         val now = new Date();

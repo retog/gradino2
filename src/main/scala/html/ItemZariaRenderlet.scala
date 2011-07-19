@@ -1,5 +1,6 @@
-package com.farewellutopia.blog
+package org.wymiwyg.gradino.html
 
+import org.wymiwyg.gradino.Ontology
 import org.apache.clerezza.rdf.core._
 import impl.util.W3CDateFormat
 import org.apache.clerezza.rdf.scala.utils.Preamble._

@@ -1,5 +1,6 @@
-package com.farewellutopia.blog
+package org.wymiwyg.gradino.html
 
+import org.wymiwyg.gradino.Ontology
 import org.apache.clerezza.rdf.core._
 import impl.util.W3CDateFormat
 import org.apache.clerezza.rdf.scala.utils.Preamble._
@@ -44,9 +45,8 @@ class ItemMarkDownRenderlet extends SRenderlet {
   <p><label>Title</label> <input type="text" name="title" value= {res/Ontology.title*} /></p>
 
   <p><label>Content</label></p>
-	<textarea id="content-id" name="contentMarkDown" rows="15" cols="80" style="width: 80%">
- {res/Ontology.content*}
-	</textarea>
+	<textarea id="content-id" name="contentMarkDown" rows="15" cols="80"
+		style="width: 80%">{res/Ontology.content*}</textarea>
 	<br />
 	<p>
 	 <label>Tags</label> <input type="text" name="tags" value={ tagString } />
