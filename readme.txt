@@ -10,6 +10,20 @@ start("mvn:org.wymiwyg/gradino")
 
 Now access /blog on you host, e.g. http://localhost:8080/blog
 
+Styling the blog:
+The style can adapted either by overwriting a css or by creating a new renderlet,
+the second approach allows to create a different HTML representation for a given
+RDF resource.
+
+To overwrite a style you simply put a file at the respective path beneath
+src/main/resources/CLEREZZA-INF/web-resources, the bundle containing this resource
+must have a higher startlevel than the bundle providing the original file.
+
+The code contains an example of Renderlet changing the appearance of most resources,
+the class org.wymiwyg.gradino.html.ResourceRenderlet is an example of such a style,
+it's activation is commented out in the Activator class.
+
+
 About this project:
 
 The original intention was to write a minimalistic blog engine based on
