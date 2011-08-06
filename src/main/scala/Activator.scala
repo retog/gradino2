@@ -16,7 +16,7 @@ import html._
 class Activator extends BundleActivator with ActivationHelper {
 
 
-	registerRootResource(new Blog(context))
+	registerRootResource(new Gradino(context))
 	registerTypeHandler(new LatestItemsTypeHandler(context))
 	//registerRenderlet(new ResourceRenderlet)
 	registerRenderlet(new BlogAdminRenderlet)
@@ -25,5 +25,6 @@ class Activator extends BundleActivator with ActivationHelper {
 	registerRenderlet(new ItemZariaRenderlet)
 	registerRenderlet(new ItemMarkDownRenderlet)
 	registerService(new LatestItemsService(context), classOf[LatestItemsService])
+	registerService(new TitledContentDateAdder(context), classOf[TitledContentDateAdder])
 
 }

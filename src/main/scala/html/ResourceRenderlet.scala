@@ -33,7 +33,7 @@ class ResourceRenderlet extends SRenderlet {
 				<meta name="description" content="Danny Ayers' blog, mostly featuring things like Linked Data and the Semantic Web" />
 				<meta name="keywords" content="Danny, Danny Ayers, Raw Blog, Linked Data, Semantic Web, RDF" />
 					<title>Danny Ayers : Raw Blog</title>
-				<link rel="stylesheet" type="text/css" href="/style/blog/style.css"/>
+				<link rel="stylesheet" type="text/css" href="/style/gradino/style.css"/>
 				<link rel="stylesheet" href="http://hyperdata.org/css/tabs.css" type="text/css" />
 				</head>
 				<body id="tab1">

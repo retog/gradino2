@@ -32,7 +32,7 @@ class ItemRenderlet extends SRenderlet {
 			override def content = {
 				val selfLink = res.getNode match {
 					case u: UriRef => u.getUnicodeString
-					case b: BNode => "/blog/newpost"
+					case b: BNode => "/gradino/newpost"
 				}
 
 				lazy val dateFormat = {
@@ -56,7 +56,11 @@ class ItemRenderlet extends SRenderlet {
 						case ex: SAXParseException => <div><strong>The following literal could not be parsed as XHTML:<br/></strong> {res/Ontology.content*}</div>
 					}
 				} else {
-					XML.loadString("<root>"+new MarkdownProcessor().markdown(res/Ontology.content*)+"</root>").child
+					try {
+						XML.loadString("<root>"+new MarkdownProcessor().markdown(res/Ontology.content*)+"</root>").child
+					} catch {
+						case ex: SAXParseException => <div><strong>The following mardown processor output could not be parsed as  XHTML:<br/></strong> {res/Ontology.content*}</div>
+					}
 				}
 				<div class="hentry"><h2 class="entry-title"><a href={selfLink}>{res/Ontology.title*}</a>
 					<a href={selfLink+"?mode=tiny"}><img src="/icons/edit.png" /></a>

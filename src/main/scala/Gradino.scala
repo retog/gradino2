@@ -33,8 +33,8 @@ import java.net.URI
 import java.security.AccessController
 import rdf.core.access.security.TcPermission
 
-@Path("blog")
-class Blog(context: BundleContext) extends Logging {
+@Path("gradino")
+class Gradino(context: BundleContext) extends Logging {
 
 	private val servicesDsl = new ServicesDsl(context)
 	import servicesDsl._
@@ -74,7 +74,7 @@ class Blog(context: BundleContext) extends Logging {
 		val ezCg = new EzMGraph(cg)
 		import ezCg._
 		lip.deleteProperty(RDF.`type`, Ontology.LatestItemsPage)
-		RedirectUtil.createSeeOtherResponse("/blog", baseUri)
+		RedirectUtil.createSeeOtherResponse("/gradino", baseUri)
 	}
 
 	@POST
@@ -85,7 +85,7 @@ class Blog(context: BundleContext) extends Logging {
 		val ezCg = new EzMGraph(cg)
 		import ezCg._
 		lip a Ontology.LatestItemsPage
-		RedirectUtil.createSeeOtherResponse("/blog", baseUri)
+		RedirectUtil.createSeeOtherResponse("/gradino", baseUri)
 	}
 
 	@GET

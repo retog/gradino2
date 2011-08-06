@@ -36,21 +36,21 @@ class BlogAdminRenderlet extends SRenderlet {
 					{
 						for (lip <- res!!) yield {
 							<div>
-								<form action="/blog/removeLip" method="post">
+								<form action="/gradino/removeLip" method="post">
 									<span>{lip}</span><input type="hidden" name="lip" value={lip*} />
 									<input type="submit" value="remove"/>
 								</form>
 							</div>
 						}
 					}
-					<form action="/blog/addLip" method="post">
+					<form action="/gradino/addLip" method="post">
 						Add Uri:
 						<input type="text" name="lip" value={baseUri} />
 						<input type="submit" value="Add"/>
 					</form>
 					<p>
-						<a href={baseUri+"blog/newpost?mode=tiny"}>Create new post with tinyMCE wysiwyg editor</a><br/>
-						<a href={baseUri+"blog/newpost?mode=markDown"}>Create new post writing MarkDown enriched text</a><br/>
+						<a href={baseUri+"gradino/newpost?mode=tiny"}>Create new post with tinyMCE wysiwyg editor</a><br/>
+						<a href={baseUri+"gradino/newpost?mode=markDown"}>Create new post writing MarkDown enriched text</a><br/>
 					</p>
 				</div>
 			}

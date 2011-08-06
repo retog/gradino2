@@ -42,7 +42,7 @@ class ItemTinyMCERenderlet extends SRenderlet {
 
 <h3>Post</h3>
 
-<form method="post" action="/blog/addpost"><!-- http://localhost/test2.php -->
+<form method="post" action="/gradino/addpost"><!-- http://localhost/test2.php -->
 
   <label>Author </label><input type="text" name="makerName" value={res/FOAF.maker/FOAF.name*} /><br/>
 
