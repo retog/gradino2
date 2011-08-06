@@ -1,4 +1,4 @@
-package org.wymiwyg.gradino.html
+package org.wymiwyg.gradino.renderlets.html
 
 import org.wymiwyg.gradino.Ontology
 import scala.xml.XML
@@ -16,6 +16,8 @@ import org.apache.clerezza.rdf.scala.utils.Preamble._
 import org.apache.clerezza.platform.typerendering.scala._
 import org.apache.clerezza.rdf.ontologies._
 import org.xml.sax.SAXParseException
+import org.wymiwyg.gradino.renderlets.common._
+
 
 
 /**
@@ -48,27 +50,14 @@ class ItemRenderlet extends SRenderlet {
 					tag*
 				}).mkString(" ")
 
-				val xmlContent = if (((res/Ontology.content).size > 0) &&
-						(((res/Ontology.content)(0)).getNode.asInstanceOf[TypedLiteral].getDataType == RDF.XMLLiteral)) {
-					try {
-						XML.loadString("<root>"+(res/Ontology.content*)+"</root>").child
-					} catch {
-						case ex: SAXParseException => <div><strong>The following literal could not be parsed as XHTML:<br/></strong> {res/Ontology.content*}</div>
-					}
-				} else {
-					try {
-						XML.loadString("<root>"+new MarkdownProcessor().markdown(res/Ontology.content*)+"</root>").child
-					} catch {
-						case ex: SAXParseException => <div><strong>The following mardown processor output could not be parsed as  XHTML:<br/></strong> {res/Ontology.content*}</div>
-					}
-				}
+				
 				<div class="hentry"><h2 class="entry-title"><a href={selfLink}>{res/Ontology.title*}</a>
 					<a href={selfLink+"?mode=tiny"}><img src="/icons/edit.png" /></a>
 					<a href={selfLink+"?mode=markDown"}><img src="/icons/markdown.png" /></a></h2>
 					{ifx (((res/FOAF.maker/FOAF.name).size > 0) && ((res/FOAF.maker/FOAF.name*) != "")) {
 						<p class="author">by {res/FOAF.maker/FOAF.name*}</p>}
 					}
-                  {xmlContent}
+                  {ItemDecorator(res).xmlContent}
 					<p class="published">
 					{
 						try {

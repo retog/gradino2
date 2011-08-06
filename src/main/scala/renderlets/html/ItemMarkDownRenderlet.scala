@@ -1,4 +1,4 @@
-package org.wymiwyg.gradino.html
+package org.wymiwyg.gradino.renderlets.html
 
 import org.wymiwyg.gradino.Ontology
 import org.apache.clerezza.rdf.core._

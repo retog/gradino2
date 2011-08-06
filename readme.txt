@@ -20,7 +20,7 @@ src/main/resources/CLEREZZA-INF/web-resources, the bundle containing this resour
 must have a higher startlevel than the bundle providing the original file.
 
 The code contains an example of Renderlet changing the appearance of most resources,
-the class org.wymiwyg.gradino.html.ResourceRenderlet is an example of such a style,
+the class org.wymiwyg.gradino.renderlets.html.ResourceRenderlet is an example of such a style,
 it's activation is commented out in the Activator class.
 
 

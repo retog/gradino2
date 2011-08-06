@@ -8,7 +8,8 @@ import org.apache.clerezza.platform.graphprovider.content.ContentGraphProvider
 import org.apache.clerezza.rdf.core.impl.TripleImpl
 import org.apache.clerezza.rdf.core.UriRef
 import org.apache.clerezza.rdf.ontologies.RDF
-import html._
+import renderlets.html._
+import renderlets._
 
 /**
  * Activator for a bundle using Apache Clerezza.
@@ -21,6 +22,7 @@ class Activator extends BundleActivator with ActivationHelper {
 	//registerRenderlet(new ResourceRenderlet)
 	registerRenderlet(new BlogAdminRenderlet)
 	registerRenderlet(new ItemRenderlet)
+	registerRenderlet(new atom.ItemRenderlet)
 	registerRenderlet(new ItemTinyMCERenderlet)
 	registerRenderlet(new ItemZariaRenderlet)
 	registerRenderlet(new ItemMarkDownRenderlet)
