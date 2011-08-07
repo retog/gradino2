@@ -8,7 +8,7 @@ to run gradino start clerezza and enter on the clerezza-console
 
 start("mvn:org.wymiwyg/gradino")
 
-Now access /blog on you host, e.g. http://localhost:8080/blog
+Now access /blog on you host, e.g. http://localhost:8080/gradino
 
 Styling the blog:
 The style can adapted either by overwriting a css or by creating a new renderlet,

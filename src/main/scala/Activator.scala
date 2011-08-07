@@ -24,6 +24,8 @@ class Activator extends BundleActivator with ActivationHelper {
 	registerRenderlet(new HeadedItemRenderlet)
 	registerRenderlet(new ItemNakedRenderlet)
 	registerRenderlet(new atom.ItemRenderlet)
+	registerRenderlet(new atom.RdfListRenderlet)
+	registerRenderlet(new atom.TitledContentRenderlet)
 	registerRenderlet(new ItemTinyMCERenderlet)
 	registerRenderlet(new ItemZariaRenderlet)
 	registerRenderlet(new ItemMarkDownRenderlet)

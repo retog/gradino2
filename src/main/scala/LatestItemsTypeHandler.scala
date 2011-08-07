@@ -1,6 +1,7 @@
 package org.wymiwyg.gradino
 
 import javax.ws.rs._
+import javax.ws.rs.core._
 import org.apache.clerezza.platform.typehandlerspace.SupportedTypes
 import org.apache.clerezza.rdf.core.impl.SimpleMGraph
 import org.apache.clerezza.rdf.utils.GraphNode
@@ -18,19 +19,21 @@ import org.apache.clerezza.rdf.core.sparql.query.Query
 /**
  * shows the latest items of the blog
  */
-@SupportedTypes(types = Array(Ontology.LatestItemsPage_String),
-	prioritize = true)
+@SupportedTypes(types = Array(Ontology.LatestItemsPage_String))
 class LatestItemsTypeHandler(context: BundleContext) {
 
 	private val servicesDsl = new ServicesDsl(context)
 	import servicesDsl._
 
-	@GET def get() = {
+	@GET def get(@Context uriInfo: UriInfo) = {
+		val uriString = uriInfo.getAbsolutePath().toString()
+		val uri = new UriRef(uriString)
 		val resultMGraph = new SimpleMGraph();
 		val cgp: ContentGraphProvider = $[ContentGraphProvider]
 		val cg = cgp.getContentGraph
-		val graphNode = new GraphNode(new BNode(), new UnionMGraph(resultMGraph, cg));
+		val graphNode = new GraphNode(uri, new UnionMGraph(resultMGraph, cg));
 		graphNode.addProperty(RDF.`type`, RDF.List)
+		//graphNode.addProperty(RDF.`type`, Ontology.LatestItemsPage)
 		import collection.JavaConversions._
 		val list = graphNode.asList
 		val allItems = $[LatestItemsService]

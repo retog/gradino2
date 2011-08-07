@@ -24,10 +24,10 @@ import javax.ws.rs.core.MediaType
  * A Renderlet for rss:items
  */
 class ItemRenderlet extends SRenderlet {
-
+	
 	val getRdfType = Ontology.Item
 
-	override def getModePattern = null
+	override def getModePattern = "atom"
 
 	override val getMediaType = MediaType.APPLICATION_ATOM_XML_TYPE
 
@@ -35,9 +35,7 @@ class ItemRenderlet extends SRenderlet {
 		new XmlResult(arguments) {
 			override def content = {
   <entry xmlns="http://www.w3.org/2005/Atom">
-
     <title>{res/Ontology.title*}</title>
-    <link rel="alternate" type="text/html" href="http://www.jenitennison.com/blog/node/162" />
     <id>{res*}</id>
     <published></published>
     <updated></updated>
