@@ -23,7 +23,7 @@ import org.wymiwyg.gradino.renderlets.common._
 /**
  * A Renderlet for rss:items
  */
-class ItemRenderlet extends SRenderlet {
+class ItemNakedRenderlet extends SRenderlet {
 
 	val getRdfType = Ontology.Item
 
