@@ -25,11 +25,18 @@ class ItemMarkDownRenderlet extends SRenderlet {
 			val editLink = "edit/"+(res*)
 			val tagString = ""
 			override def content = {
-
+			  //this is here to make sure its on top
+				resultDocModifier.addScriptReference("/jquery/jquery-1.3.2.min.js")
+				resultDocModifier.addScripts("""
+ConceptFinder.setAddConceptCallback(function(label,uri) {
+	alert(label+", "+uri)
+	$('#concepts-id-form-section').append('<input type="hidden" name="subject" value='+uri+' />')
+alert("added")
+})
+""")
     <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Edit Markdown</title>
-
 </head>
 <body>
 
@@ -51,8 +58,14 @@ class ItemMarkDownRenderlet extends SRenderlet {
 	<p>
 	 <label>Tags</label> <input type="text" name="tags" value={ tagString } />
 	  </p>
+<p>
+{render(res,"concept-tagging-naked")}
+</p>
 	  <p>
 	  <label>Date</label><input type="text" name="date" value= {res/DC.date*} />
+<div id="concepts-id-form-section">
+	  {for (concept <- res/DC.subject) yield <input type="hidden" name="subject" value={concept*} />}
+</div>
 </p>
 	<input type="submit" value="Submit" />
 </form>
