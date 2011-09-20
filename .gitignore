@@ -1,2 +1,7 @@
 target
 *.iml
+.classpath
+.project
+.scala_dependencies
+.settings/
+maven-eclipse.xml
