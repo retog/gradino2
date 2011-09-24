@@ -5,3 +5,4 @@ target
 .scala_dependencies
 .settings/
 maven-eclipse.xml
+.externalToolBuilders

@@ -6,7 +6,7 @@ import impl.util.W3CDateFormat
 import org.apache.clerezza.rdf.scala.utils.Preamble._
 import org.apache.clerezza.platform.typerendering.scala._
 import org.xml.sax.SAXParseException
-import org.apache.clerezza.rdf.ontologies.{DC, FOAF}
+import org.apache.clerezza.rdf.ontologies.{DC, FOAF, SKOS}
 import javax.ws.rs.core.MediaType
 
 /**
@@ -19,6 +19,14 @@ class ItemMarkDownRenderlet extends SRenderlet {
 	//override def getMediaType() = MediaType.TEXT_HTML_TYPE
 
 	override def getModePattern = "markDown"
+	
+	/**
+	 * The arguments may also be Strings used as javascript code, e.g. "'+uri+'"
+	 */
+	private def getSelectedSubjectXML(label: String, uri: String) = <div class="subject">
+		{label}
+		<input type="hidden" name="subject" value={uri} />
+	  </div>
 
 	override def renderedPage(arguments: XmlResult.Arguments) = {
 		new XmlResult(arguments) {
@@ -29,9 +37,8 @@ class ItemMarkDownRenderlet extends SRenderlet {
 				resultDocModifier.addScriptReference("/jquery/jquery-1.3.2.min.js")
 				resultDocModifier.addScripts("""
 ConceptFinder.setAddConceptCallback(function(label,uri) {
-	alert(label+", "+uri)
-	$('#concepts-id-form-section').append('<input type="hidden" name="subject" value='+uri+' />')
-alert("added")
+	var section = '"""+getSelectedSubjectXML("'+label+'", "'+uri+'").toString.lines.map(_.stripMargin).mkString(" ")+"""'
+	$('#concepts-id-form-section').append(section)
 })
 """)
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -59,12 +66,12 @@ alert("added")
 	 <label>Tags</label> <input type="text" name="tags" value={ tagString } />
 	  </p>
 <p>
-{render(res,"concept-tagging-naked")}
+{render(res,"concept-find-create-naked")}
 </p>
 	  <p>
 	  <label>Date</label><input type="text" name="date" value= {res/DC.date*} />
 <div id="concepts-id-form-section">
-	  {for (concept <- res/DC.subject) yield <input type="hidden" name="subject" value={concept*} />}
+	  {for (concept <- res/DC.subject) yield getSelectedSubjectXML(concept/SKOS.prefLabel*, concept*)}
 </div>
 </p>
 	<input type="submit" value="Submit" />

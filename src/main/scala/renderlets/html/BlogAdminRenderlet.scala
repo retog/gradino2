@@ -26,9 +26,21 @@ class BlogAdminRenderlet extends SRenderlet {
 
 	override def getModePattern = "naked"
 
+	private def getSelectedSubjectXML(label: String, uri: String) = <div class="subject">
+		{label}
+		<input type="hidden" name="subject" value={uri} />
+	</div>
+		
 	override def renderedPage(arguments: XmlResult.Arguments) = {
 		new XmlResult(arguments) {
 			override def content = {
+			  	resultDocModifier.addScriptReference("/jquery/jquery-1.3.2.min.js")
+				resultDocModifier.addScripts("""
+ConceptFinder.setAddConceptCallback(function(label,uri) {
+	var section = '"""+getSelectedSubjectXML("'+label+'", "'+uri+'").toString.lines.map(_.stripMargin).mkString(" ")+"""'
+	$('#concepts-id-form-section').append(section)
+})
+""")
 				val baseUri = arguments.requestProperties.getUriInfo.getBaseUri.toString
 				<div>
 					<h1>Blog Administration</h1>
@@ -37,7 +49,11 @@ class BlogAdminRenderlet extends SRenderlet {
 						for (lip <- res!!) yield {
 							<div>
 								<form action="/gradino/removeLip" method="post">
-									<span>{lip}</span><input type="hidden" name="lip" value={lip*} />
+									<span>{lip}</span>
+									{
+									  ifx((lip/DC.subject).size > 0) {<span>Concepts: {(lip/DC.subject).map(_/SKOS.prefLabel*).mkString(", ")}</span>}
+									}
+									<input type="hidden" name="lip" value={lip*} />
 									<input type="submit" value="remove"/>
 								</form>
 							</div>
@@ -46,6 +62,14 @@ class BlogAdminRenderlet extends SRenderlet {
 					<form action="/gradino/addLip" method="post">
 						Add Uri:
 						<input type="text" name="lip" value={baseUri} />
+  						<p>
+						<span id="concepts-id-form-section">
+	  						{for (concept <- res/DC.subject) yield getSelectedSubjectXML(concept/SKOS.prefLabel*, concept*)}
+						</span>
+						</p>
+						<p>
+							{render(res,"concept-find-create-naked")}
+						</p>
 						<input type="submit" value="Add"/>
 					</form>
 					<p>

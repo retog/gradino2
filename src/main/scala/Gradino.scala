@@ -53,11 +53,12 @@ class Gradino(context: BundleContext) extends Logging {
 
 	@GET
 	def default() = {
-		val result = new RichGraphNode(new BNode, new SimpleMGraph)
-		result a Ontology.BlogAdminPage
-		val resultList = result.asList
 		val cgp: ContentGraphProvider = $[ContentGraphProvider]
 		val cg = cgp.getContentGraph
+		val baseGraph = new UnionMGraph(new SimpleMGraph, cg)
+		val result = new RichGraphNode(new BNode, baseGraph)
+		result a Ontology.BlogAdminPage
+		val resultList = result.asList
 		val ezCg = new EzMGraph(cg)
 		import ezCg._
 		for (ltp <- Ontology.LatestItemsPage/-RDF.`type`) {
@@ -79,12 +80,19 @@ class Gradino(context: BundleContext) extends Logging {
 
 	@POST
 	@Path("addLip")
-	def addLip(@FormParam("lip") lip: UriRef, @Context baseUri: UriInfo) = {
+	def addLip(@FormParam("lip") lip: UriRef, @FormParam("subject") subjects: java.util.List[UriRef], @Context baseUri: UriInfo) = {
+		import scala.collection.JavaConversions._
 		val cgp: ContentGraphProvider = $[ContentGraphProvider]
 		val cg = cgp.getContentGraph
 		val ezCg = new EzMGraph(cg)
 		import ezCg._
 		lip a Ontology.LatestItemsPage
+		if (subjects != null) {
+			import scala.collection.JavaConversions._
+			for (s <- subjects) {
+			  lip -- DC.subject --> s
+			}
+		}
 		RedirectUtil.createSeeOtherResponse("/gradino", baseUri)
 	}
 
@@ -112,8 +120,15 @@ class Gradino(context: BundleContext) extends Logging {
 				@FormParam("contentMarkDown") contentMarkDown: String,
 				@FormParam("makerName") makerName: String,
 				@FormParam("uri") uriString: String,
+				@FormParam("subject") subjects: java.util.List[String],
 			   @FormParam("tags") tags : String, @FormParam("date") date : String) = {
-		val item: UriRef = insertItem(title, content, contentMarkDown, makerName, uriString, tags, date)
+		import scala.collection.JavaConversions._
+		val subjectList: Iterable[String] = if (subjects == null) {
+			Nil
+		} else {
+			subjects
+		}
+		val item: UriRef = insertItem(title, content, contentMarkDown, makerName, uriString, subjectList, tags, date)
 		var responseBuilder: ResponseBuilder = Response.status(Response.Status.SEE_OTHER);
 		responseBuilder = responseBuilder.entity("item saved");
 		responseBuilder = responseBuilder.location(new URI(item.getUnicodeString));
@@ -122,7 +137,7 @@ class Gradino(context: BundleContext) extends Logging {
 
 	private def insertItem(title: String, content: String, contentMarkDown: String,
 						   makerName : String,
-						   uriString: String, tags : String,
+						   uriString: String, subjects: Iterable[String], tags : String,
 												 existingDate : String) = {
 		val date =
 			if( existingDate=="" || existingDate == null ){
@@ -142,6 +157,11 @@ class Gradino(context: BundleContext) extends Logging {
 			val p = new Preamble(contentGraph)
 			val g = new GraphNode(new UriRef(uri), contentGraph)
 			g.deleteNodeContext
+			if (subjects != null) {
+				for (subject <- subjects) {
+				  g.addProperty(DC.subject, new UriRef(subject))
+				}
+			}
 		}
 
 
@@ -175,6 +195,7 @@ class Gradino(context: BundleContext) extends Logging {
 		}
 		contentGraph.add(new TripleImpl(itemRes, 
 			new UriRef("http://planetrdf.com/ns/content"), contentLit))
+		
 		itemRes
 	}
 	private def getDate() : String = {
