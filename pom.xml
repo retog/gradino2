@@ -2,8 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.clerezza</groupId>
-		<artifactId>parent</artifactId>
-		<version>0.2-incubating-SNAPSHOT</version>
+		<artifactId>clerezza</artifactId>
+		<version>0.2-incubating</version>
 	</parent>
     <groupId>org.wymiwyg</groupId>
 	<artifactId>gradino</artifactId>
@@ -104,7 +104,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	<repositories>
+	<!-- <repositories>
 		<repository>
 			<id>apache</id>
 			<name>apache repository</name>
@@ -115,7 +115,7 @@
 			<url>http://repository.apache.org/content/groups/snapshots-group</url>
 			<layout>default</layout>
 		</repository>
-	</repositories>
+	</repositories> -->
 </project>
 
 
