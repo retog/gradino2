@@ -1,0 +1,3 @@
+[submodule "src/main/resources/CLEREZZA-INF/web-resources/create"]
+	path = src/main/resources/CLEREZZA-INF/web-resources/create
+	url = https://github.com/bergie/create.git
