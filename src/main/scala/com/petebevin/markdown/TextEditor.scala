@@ -6,7 +6,7 @@ import java.util.Collection
 import java.util.List
 import java.util.ArrayList
 //remove if not needed
-import scala.collection.JavaConversions._
+import _root_.scala.collection.JavaConversions._
 
 /**
  * Mutable String with common operations used in Markdown processing.

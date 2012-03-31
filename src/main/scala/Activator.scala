@@ -1,7 +1,7 @@
 package org.wymiwyg.gradino
 
 import org.osgi.framework.{BundleActivator, BundleContext, ServiceRegistration}
-import scala.collection.JavaConversions.asJavaDictionary
+import _root_.scala.collection.JavaConversions.asJavaDictionary
 import org.apache.clerezza.platform.typerendering.{TypeRenderlet, RenderletManager}
 import org.apache.clerezza.osgi.services.ServicesDsl
 import org.apache.clerezza.platform.graphprovider.content.ContentGraphProvider

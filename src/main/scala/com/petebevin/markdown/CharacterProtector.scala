@@ -6,7 +6,7 @@ import java.util.Map
 import java.util.Random
 import CharacterProtector._
 //remove if not needed
-import scala.collection.JavaConversions._
+import _root_.scala.collection.JavaConversions._
 
 object CharacterProtector {
 

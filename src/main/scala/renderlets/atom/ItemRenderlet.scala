@@ -2,7 +2,7 @@ package org.wymiwyg.gradino.renderlets.atom
 
 import org.wymiwyg.gradino.Ontology
 import org.wymiwyg.gradino.renderlets.common._
-import scala.xml.XML
+import _root_.scala.xml.XML
 import javax.ws.rs.core.MediaType
 import java.util.Date
 import java.text.DateFormat

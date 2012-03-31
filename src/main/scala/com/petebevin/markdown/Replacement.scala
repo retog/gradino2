@@ -2,7 +2,7 @@ package com.petebevin.markdown
 
 import java.util.regex.Matcher
 //remove if not needed
-import scala.collection.JavaConversions._
+import _root_.scala.collection.JavaConversions._
 
 trait Replacement {
 

@@ -2,8 +2,8 @@ package org.wymiwyg.gradino
 
 import org.apache.clerezza.osgi.services.ServicesDsl
 import org.apache.clerezza.platform.typerendering.TypeRenderlet
-import scala.collection.JavaConversions.asJavaDictionary
-import scala.collection.mutable
+import _root_.scala.collection.JavaConversions.asJavaDictionary
+import _root_.scala.collection.mutable
 import org.osgi.framework.{ServiceRegistration, BundleContext, BundleActivator}
 
 /**

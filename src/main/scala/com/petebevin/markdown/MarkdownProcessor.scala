@@ -8,7 +8,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import MarkdownProcessor._
 //remove if not needed
-import scala.collection.JavaConversions._
+import _root_.scala.collection.JavaConversions._
 
 object MarkdownProcessor {
 

@@ -3,7 +3,7 @@ package com.petebevin.markdown
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 //remove if not needed
-import scala.collection.JavaConversions._
+import _root_.scala.collection.JavaConversions._
 
 object HTMLDecoder {
 

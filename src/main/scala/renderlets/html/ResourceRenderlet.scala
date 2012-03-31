@@ -1,7 +1,7 @@
 package org.wymiwyg.gradino.renderlets.html
 
 import org.wymiwyg.gradino.Ontology
-import scala.xml.XML
+import _root_.scala.xml.XML
 import java.util.Date
 import java.text.DateFormat
 import org.apache.clerezza.rdf.core._

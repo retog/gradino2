@@ -14,7 +14,7 @@ import org.apache.clerezza.rdf.core._
 import event._
 import impl.util.W3CDateFormat
 import util.Sorting
-import scala.actors.Actor.actor
+import _root_.scala.actors.Actor.actor
 
 
 /**

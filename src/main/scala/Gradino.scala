@@ -81,14 +81,14 @@ class Gradino(context: BundleContext) extends Logging {
 	@POST
 	@Path("addLip")
 	def addLip(@FormParam("lip") lip: UriRef, @FormParam("subject") subjects: java.util.List[UriRef], @Context baseUri: UriInfo) = {
-		import scala.collection.JavaConversions._
+		import _root_.scala.collection.JavaConversions._
 		val cgp: ContentGraphProvider = $[ContentGraphProvider]
 		val cg = cgp.getContentGraph
 		val ezCg = new EzMGraph(cg)
 		import ezCg._
 		lip a Ontology.LatestItemsPage
 		if (subjects != null) {
-			import scala.collection.JavaConversions._
+			import _root_.scala.collection.JavaConversions._
 			for (s <- subjects) {
 			  lip -- DC.subject --> s
 			}
@@ -122,7 +122,7 @@ class Gradino(context: BundleContext) extends Logging {
 				@FormParam("uri") uriString: String,
 				@FormParam("subject") subjects: java.util.List[String],
 			   @FormParam("tags") tags : String, @FormParam("date") date : String) = {
-		import scala.collection.JavaConversions._
+		import _root_.scala.collection.JavaConversions._
 		val subjectList: Iterable[String] = if (subjects == null) {
 			Nil
 		} else {
