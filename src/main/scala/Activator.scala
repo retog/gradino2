@@ -1,3 +1,4 @@
+
 package org.wymiwyg.gradino
 
 import org.osgi.framework.{BundleActivator, BundleContext, ServiceRegistration}
@@ -18,6 +19,7 @@ class Activator extends BundleActivator with ActivationHelper {
 
 
 	registerRootResource(new Gradino(context))
+        registerRootResource(new Backbone(context))
 	registerTypeHandler(new LatestItemsTypeHandler(context))
 	//registerRenderlet(new ResourceRenderlet)
 	registerRenderlet(new BlogAdminRenderlet)
@@ -27,6 +29,7 @@ class Activator extends BundleActivator with ActivationHelper {
 	registerRenderlet(new atom.RdfListRenderlet)
 	registerRenderlet(new atom.TitledContentRenderlet)
 	registerRenderlet(new ItemTinyMCERenderlet)
+        registerRenderlet(new ItemCreateRenderlet(context))
 	registerRenderlet(new ItemZariaRenderlet)
 	registerRenderlet(new ItemMarkDownRenderlet)
 	registerService(new LatestItemsService(context), classOf[LatestItemsService])

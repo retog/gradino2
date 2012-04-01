@@ -28,7 +28,7 @@ class ItemTinyMCERenderlet extends SRenderlet {
 
     <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Post</title>
+<title>Edit Post</title>
 
 <!-- TinyMCE -->
 <script type="text/javascript" src="/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
@@ -40,7 +40,7 @@ class ItemTinyMCERenderlet extends SRenderlet {
 </head>
 <body>
 
-<h3>Post</h3>
+<h3>Tyni Edit Post</h3>
 
 <form method="post" action="/gradino/addpost"><!-- http://localhost/test2.php -->
 

@@ -45,10 +45,7 @@ class ItemNakedRenderlet extends SRenderlet {
 						new W3CDateFormat
 					}
 				}
-				//resultDocModifier.addStyleSheet("/styles/hello-world/style.css")
-				def tags: String = "tags: "+(for (tag <- res/Ontology.taggedWith) yield {
-					tag*
-				}).mkString(" ")
+
 
 				
 				<div class="hentry"><h2 class="entry-title"><a href={selfLink}>{res/Ontology.title*}</a>
@@ -67,7 +64,7 @@ class ItemNakedRenderlet extends SRenderlet {
 						}
 					}
 					</p>
-                  <!-- <p class="tag">{tags}</p> -->
+                  
                   <!-- <p><a href={ related }>Related</a></p>
                   <p><a href={ comment }>Comments</a></p> -->
                </div>
