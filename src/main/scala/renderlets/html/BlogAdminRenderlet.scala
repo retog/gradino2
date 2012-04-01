@@ -73,6 +73,10 @@ ConceptFinder.setAddConceptCallback(function(label,uri) {
 						<input type="submit" value="Add"/>
 					</form>
 					<p>
+							<a href={baseUri+"gradino/newpost?mode=create"}>Create new post with create.js</a><br/>
+					</p>
+					<p>
+							Alternatives:
 						<a href={baseUri+"gradino/newpost?mode=tiny"}>Create new post with tinyMCE wysiwyg editor</a><br/>
 						<a href={baseUri+"gradino/newpost?mode=markDown"}>Create new post writing MarkDown enriched text</a><br/>
 					</p>

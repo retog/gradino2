@@ -38,12 +38,6 @@ class ItemCreateRenderlet(context: BundleContext) extends SRenderlet {
 		new XmlResult(arguments) {
 			val editLink = "edit/"+(res*)
 			override def content = { 
-	resultDocModifier.addScripts("""
-ConceptFinder.setAddConceptCallback(function(label,uri) {
-	var section = '"""+getSelectedSubjectXML("'+label+'", "'+uri+'").toString.lines.map(_.stripMargin).mkString(" ")+"""'
-	$('#concepts-id-form-section').append(section)
-})
-""")
 
    <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -112,9 +106,9 @@ ConceptFinder.setAddConceptCallback(function(label,uri) {{
   <body>
     <div xmlns:sioc="http://rdfs.org/sioc/ns#" xmlns:dcterms="http://purl.org/dc/terms/"
     about="http://example.net/blog/" rel="dcterms:hasPart" rev="dcterms:partOf">
-      <article typeof="sioc:Post" about={if (res.getNode.isInstanceOf[UriRef]) res* else ""}>
-        <h1 property="dcterms:title">{res/DCTERMS.title*}</h1>
-        <div property="sioc:content">{res/SIOC.content*}</div>
+      <article typeof="sioc:Post" about={if (res.getNode.isInstanceOf[UriRef]) res* else "urn:x-magic:new"}>
+        <h1 property="dcterms:title">{if ((res/DCTERMS.title).size > 0) res/DCTERMS.title* else "[no title]"}</h1>
+        <div property="sioc:content">{if ((res/SIOC.content).size > 0) res/SIOC.content* else "[no content]"}</div>
       </article>
 	  <p>
 	{

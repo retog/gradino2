@@ -32,6 +32,7 @@ import rdf.ontologies.{DC, RDF}
 import java.net.URI
 import java.security.AccessController
 import rdf.core.access.security.TcPermission
+import org.apache.clerezza.rdf.ontologies.SIOC
 
 @Path("gradino")
 class Gradino(context: BundleContext) extends Logging {
@@ -39,17 +40,6 @@ class Gradino(context: BundleContext) extends Logging {
 	private val servicesDsl = new ServicesDsl(context)
 	import servicesDsl._
 
-	private def baseUri = {
-		import platform.config.PlatformConfig
-		val pc = $[PlatformConfig]
-		if (pc != null) {
-			pc.getDefaultBaseUri.getUnicodeString
-		} else {
-			logger.warn("Couldn't access PlatformConfig")
-			"http://localhost:8080/"
-		}
-
-	}
 
 	@GET
 	def default() = {
@@ -106,6 +96,7 @@ class Gradino(context: BundleContext) extends Logging {
 		val cg = cgp.getContentGraph
 		val graphNode = new GraphNode(new BNode(), new UnionMGraph(resultMGraph, cg))
 		graphNode.addProperty(RDF.`type`, Ontology.Item)
+		graphNode.addProperty(RDF.`type`, SIOC.Post)
 		graphNode.addPropertyValue(DC.date, new Date)
 		graphNode.addProperty(Ontology.title, new PlainLiteralImpl("a blank item"))
 		graphNode
@@ -205,13 +196,6 @@ class Gradino(context: BundleContext) extends Logging {
 	}
 
 	private def buildUri(title : String) : String = {
-        val now = new Date();
-        val sdf = new SimpleDateFormat("yyyy/MM/dd/");
-
-		var uri = baseUri+ sdf.format( now )
-		var stub = title.replaceAll(" ","-")
-		uri = uri+stub
-		// System.out.println("URI for POSTed item = "+uri)
-		return uri
+		return new UriCreation(context).buildUri(title)
 	}
 }

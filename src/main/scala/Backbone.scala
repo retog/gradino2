@@ -28,7 +28,7 @@ import platform.graphprovider.content.ContentGraphProvider
 import rdf.core.{BNode, UriRef}
 import rdf.utils.{UnionMGraph, GraphNode}
 import rdf.core.impl.{PlainLiteralImpl, SimpleMGraph}
-import rdf.ontologies.{DC, RDF}
+import rdf.ontologies.{DC, DCTERMS, RDF}
 import java.net.URI
 import java.security.AccessController
 import rdf.core.access.security.TcPermission
@@ -48,14 +48,29 @@ class Backbone(context: BundleContext) extends Logging {
   
   @PUT
   @Produces(Array("application/rdf+json"))
-  def update(json: String) = {
+  def update(json: String,@Context uriInfo : UriInfo) = {
 	val cgp: ContentGraphProvider = $[ContentGraphProvider]
 	val cg = cgp.getContentGraph
 	val newItem = parse(json)
-	val existingItem = new GraphNode(newItem.getNode, cg)
+	newItem.addPropertyValue(DC.date, new java.util.Date)
+	val itemUri = if (newItem.getNode.asInstanceOf[UriRef].getUnicodeString().equals("urn:x-magic:new")) {
+	  import Preamble._
+	  val title = (newItem/DCTERMS.title*);
+	  val uri = new UriRef((new UriCreation(context)).buildUri(title))
+	  newItem.replaceWith(uri)
+	  uri
+	} else {
+	  newItem.getNode
+	}
+	val existingItem = new GraphNode(itemUri, cg)
 	existingItem.deleteNodeContext()
-	cg.addAll(parse(json).getGraph)
-	parse(json).getGraph
+	cg.addAll(newItem.getGraph())
+	//redirect only ajay, not browser:
+	/*if (newItem.getNode != itemUri) {
+	  RedirectUtil.createSeeOtherResponse(itemUri.asInstanceOf[UriRef].getUnicodeString(), uriInfo)
+	} else {*/
+		newItem.getGraph()
+	//}
   }
         
   /**
